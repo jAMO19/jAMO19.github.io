@@ -1,0 +1,236 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+    <head> 
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> 
+            Carson Jamieson - GIS Portfolio
+        </title> 
+        <link rel="stylesheet" href="Style.css"> 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    </head> 
+
+    <body>
+    <!-- Navigation -->
+        <nav>
+            <div class="container">
+                <a href="index.html" class="logo">Carson Jamieson.GIS</a>
+                <a href="index.html" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Home
+                </a>
+            </div>
+        </nav> 
+
+
+        <section class="project-header">
+            <h1>Automated Tree Mortality Distribution Assessment</h1>
+            <p>QGIS Model Builder workflow for dynamic tree mortality distribution mapping using multi-criteria spatial analysis</p>
+            <div class="project-meta">
+                <div class="meta-item">
+                    <i class="fas fa-calendar"></i>
+                    <span>December 2022</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>British Columbia, Canada</span>
+                </div>
+            </div>
+            <div class="tags">
+                <span class="tag">QGIS</span>
+                <span class="tag">Model Builder</span>
+                <span class="tag">Raster Analysis</span>
+                <span class="tag">Multi-Criteria Analysis</span>
+                <span class="tag">Open Data</span>
+            </div>
+        </section> 
+
+
+        <div class="container">
+            <div class="content-grid">
+                <div class="main-content">
+                    <!-- Project Overview -->
+                    <h2>Project Overview</h2>
+                    <p>With climate change occuring accross British Columbia, tree mortality rates across the province have increased, specifially mortalities caused by drought. This project develops an automated workflow using QGIS Model Builder to assess tree drought mortalities across BC. The model combines multiple spatial datasets to identify areas with mortalites, enabling awareness of most affected regions by climate change.</p>
+                    <br>
+                    <p>By automating the analysis through Model Builder, this workflow can be easily updated with new data, making it a scalable solution for ongoing tree mortality analysis.</p>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="number">5,000+</div>
+                            <div class="label">Trees Analyzed</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="number">6</div>
+                            <div class="label">Risk Factors Integrated</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="number">3</div>
+                            <div class="label">Main Processing Steps</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="number">100%</div>
+                            <div class="label">Automated Workflow</div>
+                        </div>
+                    </div>  
+
+                    <div id="distribution-map-container" style="width: 100%; height: 600px; margin: 2rem 0; border: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.2);"></div> 
+
+
+                   <!-- <div class="map-nav-controls" style="position: relative; top: 10px; left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; gap: 10px; background: rgba(255,255,255,0.9); padding: 10px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
+                        <button id="prevRaster" class="btn" style="padding: 5px 15px; background: var(--primary); color: white;"><i class="fas fa-chevron-left"></i></button>
+                        <span id="rasterTitle" style="font-weight: bold; min-width: 150px; text-align: center; align-self: center;">2018 Mortality</span>
+                        <button id="nextRaster" class="btn" style="padding: 5px 15px; background: var(--primary); color: white;"><i class="fas fa-chevron-right"></i></button>
+                    </div> -->
+                
+                    <div class="highlight-box" style="margin-top: 1rem;"> 
+                        <h4><i class="fas fa-info-circle"></i> Interactive Map Instructions:</h4> 
+                        <p><strong>Click anywhere on the raster layer</strong> to query tree mortality data for that location.</p> 
+                    </div> 
+    
+
+
+                    <h2>QGIS Model Builder Workflow</h2>
+                    <p style="margin-bottom: 3rem;">The Tree Drought Mortalities automated model processes multiple spatial datasets through a series of geoprocessing steps, applying summarize overlay analysis to generate a comprehensive risk assessment. This approach ensures consistency, repeatability, and enables rapid updates when new data becomes available.</p> 
+
+                    <div class="workflow-diagram"> 
+                        <h3 style="text-align: center; color: var(--primary); margin-bottom: 1.5rem; font-size: 2rem;"> Automated Workflow Diagram</h3> 
+
+                        <svg width="100%" height="1000" viewBox="0 0 900 1000" style="background: #f8f9fa; border-radius: 10px;"> 
+                            <defs> 
+                                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"> 
+                                    <polygon points="0 0, 10 3, 0 6" fill="#48a9a6" />
+                                </marker>
+                            </defs>  
+
+
+                            <g id="all-arrows"> 
+                                <line x1="450" y1="85" x2="450" y2="130" stroke="#48a9a6" stroke-width="2" marker-end="url(#arrowhead)"/> 
+                                <line x1="450" y1="185" x2="450" y2="260" stroke="#48a9a6" stroke-width="2" marker-end="url(#arrowhead)"/> 
+                                <line x1="450" y1="285" x2="450" y2="390" stroke="#48a9a6" stroke-width="2" marker-end="url(#arrowhead)"/> 
+                                <line x1="450" y1="430" x2="450" y2="520" stroke="#48a9a6" stroke-width="2" marker-end="url(#arrowhead)"/> 
+                                <line x1="250" y1="430" x2="370" y2="430" stroke="#48a9a6" stroke-width="2" marker-end="url(#arrowhead)"/> 
+                                <line x1="450" y1="555" x2="450" y2="650" stroke="#48a9a6" stroke-width="2" marker-end="url(#arrowhead)"/> 
+                                <line x1="450" y1="685" x2="450" y2="780" stroke="#48a9a6" stroke-width="2" marker-end="url(#arrowhead)"/>
+                            </g>
+
+                            <g id="inputs"> 
+                                <ellipse cx="450" cy="50" rx="80" ry="35" fill="#e3f2fd" stroke="#2196f3" stroke-width="2"/>
+                                <text x="450" y="47" text-anchor="middle" font-size="13px" font-weight="bold" fill="#1565c0">Points Shapefile</text> 
+                                <text x="450" y="62" text-anchor="middle" font-size="10px" fill="#666">BC Tree Mortality Data</text>
+                            </g>
+
+                            <g id="processing"> 
+                                <rect x="370" y="130" width="160" height="70" rx="5" fill="#48a9a6" stroke="#2c5f8d" stroke-width="2"/>
+                                <text x="450" y="157" text-anchor="middle" font-size="14px" fill="#fff">Select</text> 
+                                <text x="450" y="176" text-anchor="middle" font-size="11px" fill="#fff">Drought Mortalities</text> 
+                            </g> 
+
+                            <g id="input2"> 
+                                <ellipse cx="450" cy="295" rx="80" ry="35" fill="#dbffdb" stroke="#0a940e" stroke-width="2"/>
+                                <text x="450" y="291" text-anchor="middle" font-size="13px" font-weight="bold" fill="#005e03">Points</text> 
+                                <text x="450" y="306" text-anchor="middle" font-size="10px" fill="#666">Drought Mortality Data</text>
+                            </g> 
+
+                            <g id="input_accessory"> 
+                                <ellipse cx="220" cy="430" rx="80" ry="35" fill="#f7daf7" stroke="#9c0b9c" stroke-width="2"/>
+                                <text x="220" y="426" text-anchor="middle" font-size="13px" font-weight="bold" fill="#820980">Polygon</text> 
+                                <text x="220" y="441" text-anchor="middle" font-size="10px" fill="#666">BC Fishnet</text>
+                            </g> 
+
+                            <g id="processing2"> 
+                                <rect x="370" y="390" width="160" height="70" rx="5" fill="#48a9a6" stroke="#2c5f8d" stroke-width="2"/>
+                                <text x="450" y="417" text-anchor="middle" font-size="14px" fill="#fff">Summarize Within</text> 
+                                <text x="450" y="435" text-anchor="middle" font-size="11px" fill="#fff">Points Within Grid</text> 
+                            </g> 
+
+                            <g id="input3"> 
+                                <ellipse cx="450" cy="555" rx="80" ry="35" fill="#dbffdb" stroke="#0a940e" stroke-width="2"/>
+                                <text x="450" y="551" text-anchor="middle" font-size="13px" font-weight="bold" fill="#005e03">Polygon</text> 
+                                <text x="450" y="566" text-anchor="middle" font-size="10px" fill="#666">Fishnet (Year)</text>
+                            </g> 
+
+                            <g id="processing3"> 
+                                <rect x="370" y="650" width="160" height="70" rx="5" fill="#48a9a6" stroke="#2c5f8d" stroke-width="2"/>
+                                <text x="450" y="677" text-anchor="middle" font-size="14px" fill="#fff">Polygon to Raster</text> 
+                                <text x="450" y="695" text-anchor="middle" font-size="11px" fill="#fff">Number of Trees within</text> 
+                                <text x="450" y="710" text-anchor="middle" font-size="11px" fill="#fff">a gridcell</text>
+                            </g>
+
+                            <g id="output"> 
+                                <ellipse cx="450" cy="825" rx="120" ry="45" fill="#4caf50" stroke="#2e7d32" stroke-width="3"/>
+                                <text x="450" y="820" text-anchor="middle" font-size="15px" font-weight="bold" fill="white">Raster</text> 
+                                <text x="450" y="835" text-anchor="middle" font-size="11px" fill="white">Tree Drought Mortalities (Year) Raster</text>
+                            </g> 
+
+                            <g id="legend"> 
+                                <rect x="115" y="930" width="680" height="50" rx="5" fill="white" stroke="#ccc" stroke-width="1"/> 
+                                <text x="140" y="960" font-size="15px" font-weight="bold" fill="#333">Legend:</text> 
+
+                                <ellipse cx="280" cy="950" rx="30" ry="15" fill="#e3f2fd" stroke="#2196f3" stroke-width="1"/> 
+                                <text x="280" y="975" text-anchor="middle" font-size="10px" fill="#666">Input Data</text> 
+
+                                <rect x="390" y="938" width="60" height="26" rx="3" fill="#48a9a6" stroke="#2c5f8d" stroke-width="1"/> 
+                                <text x="420" y="975" text-anchor="middle" font-size="10px" fill="#666">Processing</text> 
+
+                                <ellipse cx="580" cy="950" rx="30" ry="15" fill="#f7daf7" stroke="#9c0b9c" stroke-width="1"/> 
+                                <text x="580" y="975" text-anchor="middle" font-size="10px" fill="#666">Accessory Data</text>
+
+                                <ellipse cx="740" cy="950" rx="30" ry="15" fill="#4caf50" stroke="#2e7d32" stroke-width="2"/> 
+                                <text x="740" y="975" text-anchor="middle" font-size="10px" fill="#666">Output Data</text>
+                                
+                            </g>
+                        </svg> 
+
+
+
+                    </div> 
+
+
+                    <h2>Future Enhancements</h2>
+                    <ul style="margin-left: 2rem; line-height: 2;"> 
+                        <li><strong>Specific Tree Species:</strong> Use further processing tools to determine what tree species are most vulnerable to drought stress</li>
+                        <li><strong>Web application:</strong> Deploy as an interactive web map with user-adjustable parameters</li>
+                        <li><strong>Climate change scenarios:</strong> Model future risk under different climate change scenarios</li>
+                    </ul>
+
+
+
+                </div> 
+            </div> 
+        </div> 
+
+        <footer>
+            <div class="footer-content">
+                <p>&copy; 2025 Carson Jamieson | All rights reserved. | Built with passion for GIS&trade;</p>
+                <div class="social-links">
+                    <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="#" title="Email"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </footer>
+        
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" /> 
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.11.0/proj4.js"></script>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script> 
+
+        <!--<script src="https://unpkg.com/georaster@1.6.0/dist/georaster.browser.bundle.min.js"></script> 
+        <script src="https://unpkg.com/georaster-layer-for-leaflet@3.10.0/dist/georaster-layer-for-leaflet.min.js"></script>--> 
+
+        <script src="https://cdn.jsdelivr.net/npm/geotiff@2.0.7/dist-browser/geotiff.js"></script>
+
+
+        <script src="https://unpkg.com/georaster/dist/georaster.browser.bundle.min.js"></script>
+        <script src="https://unpkg.com/georaster-layer-for-leaflet/dist/georaster-layer-for-leaflet.min.js"></script> 
+
+
+
+        <script src="https://unpkg.com/geoblaze"></script> 
+
+        <script src="TreeAnalysisMap.js"></script>
+        
+
+
+    </body> 

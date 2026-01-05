@@ -1,0 +1,252 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+    <head> 
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> 
+            Story Map
+        </title> 
+        <link rel="stylesheet" href="Style.css"> 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    </head> 
+    <body> 
+
+        <nav>
+            <div class="container">
+                <a href="index.html" class="logo">Carson Jamieson.GIS</a>
+                <a href="index.html" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Home
+                </a>
+            </div>
+        </nav> 
+
+      <section class="story-header">
+            <h1>Survey Project Journey</h1>
+            <p>Explore my hands-on experience in survey and spatial data collection through key projects completed during my time at McElhanney Ltd.</p>
+        </section> 
+
+        <div class="progress-bar">
+            
+            <div class="progress-fill" id="progressFill"></div> 
+        
+        </div> 
+
+        <div class="story-container">
+        <!-- Scrolling Story Panel -->
+            <div class="story-panel" id="storyPanel">
+            
+            <!-- Intro Section -->
+                <div class="story-section intro-section" data-location="intro">
+                    <h2>Welcome to My Survey Story</h2>
+                    <p>This interactive map illustrates my journey as a Survey Technician, showcasing the diverse projects and locations I've worked across Vancouver Island. Each pin represents a unique challenge, learning experience, and contribution to spatial data collection.</p> 
+                    <p><br></p>
+                    <p>Scroll down to explore each project in detail. The map will automatically navigate to each location as you read.</p>
+                    <div class="story-stats">
+                        <div class="stat-box">
+                            <div class="number">5+</div>
+                            <div class="label">Projects Completed</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="number">200+</div>
+                            <div class="label">Field Days</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="number">50km²</div>
+                            <div class="label">Area Surveyed</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="number">4</div>
+                            <div class="label">Survey Technologies</div>
+                        </div>
+                    </div>
+                </div> 
+
+                <div class="story-section" data-location="john-hart-dam" data-lat="50.0422" data-lon="-125.3386" data-zoom="13">
+                    <div class="timeline">
+                        <div class="timeline-dot"></div>
+                        <h2>John Hart Dam Seismic Upgrade</h2>
+                    </div> 
+                    <div class="story-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-calendar"></i>
+                            <span>September 2024 - November 2025</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Campbell River, BC</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-building"></i>
+                            <span>McElhanney Ltd.</span>
+                        </div>
+                    </div>
+
+                    <div class="story-image">
+                        <img src="20250905_085206.jpg" alt="Spatial Analysis" class="story-image">
+                    </div>
+
+                    <p>Led comprehensive topographic surveys for a major municipal infrastructure project, collecting precise elevation data and existing utility locations across 15 kilometers of proposed road corridors.</p>
+
+                    <p>Utilized robotic total stations and RTK GPS to achieve sub-centimeter accuracy, coordinating with engineering teams to ensure data met strict specifications for design integration.</p>
+
+                    <div class="story-stats">
+                        <div class="stat-box">
+                            <div class="number">15 km</div>
+                            <div class="label">Linear Survey</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="number">2,400+</div>
+                            <div class="label">Survey Points</div>
+                        </div>
+                    </div>
+
+                    <div class="story-tags">
+                        <span class="tag">Robotic Total Station</span>
+                        <span class="tag">RTK GPS</span>
+                        <span class="tag">AutoCAD</span>
+                        <span class="tag">Topographic Survey</span>
+                    </div>
+                </div> 
+
+                <div class="story-section" data-location="courtenay-downtown" data-lat="49.6874" data-lon="-124.9922" data-zoom="14.75">
+                    <div class="timeline">
+                        <div class="timeline-dot"></div>
+                        <h2>Downtown Courtenay Parking Study</h2>
+                    </div> 
+                    <div class="story-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-calendar"></i>
+                            <span>September - October 2023</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Courtenay, BC</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-building"></i>
+                            <span>McElhanney Ltd.</span>
+                        </div>
+                    </div>
+
+                    <div class="story-image">
+                        <img src="20231007_111644.jpg" alt="Spatial Analysis" class="story-image">
+                    </div>
+
+                    <p>Helped collecting photogrammetry data of parking distribution throughout a whole day, using RPAS and RTK GPS to achieve sub-centimeter accuracy.</p>
+
+                    <p>Utilized robotic total stations and RTK GPS to achieve sub-centimeter accuracy, coordinating with engineering teams to ensure data met strict specifications for design integration.</p>
+
+                    <div class="story-stats">
+                        <div class="stat-box">
+                            <div class="number">10,000+</div>
+                            <div class="label">Photos Taken</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="number">40+</div>
+                            <div class="label">Hours Flown</div>
+                        </div>
+                    </div>
+
+                    <div class="story-tags">
+                        <span class="tag">RPAS</span>
+                        <span class="tag">RTK GPS</span>
+                        <span class="tag">Photogrammetry</span>
+                        <span class="tag">Orthophoto processing</span>
+                    </div>
+                </div> 
+
+                <div class="story-section" data-location="port-hardy" data-lat="50.7024" data-lon="-127.9522" data-zoom="12">
+                    <div class="timeline">
+                        <div class="timeline-dot"></div>
+                        <h2>Holberg boring hole</h2>
+                    </div> 
+                    <div class="story-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-calendar"></i>
+                            <span>September - October 2023</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Courtenay, BC</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-building"></i>
+                            <span>McElhanney Ltd.</span>
+                        </div>
+                    </div>
+
+                    <div class="story-image">
+                        <img src="20231127_103505.jpg" alt="Spatial Analysis" class="story-image">
+                    </div>
+
+                    <p>Led comprehensive topographic surveys for a major municipal infrastructure project, collecting precise elevation data and existing utility locations across 15 kilometers of proposed road corridors.</p>
+
+                    <p>Using GPS and known coordinate points to locate and stake out to boring holes, ensuring accurate placement for subsurface investigations.</p>
+
+                    <div class="story-stats">
+                        <div class="stat-box">
+                            <div class="number">18 km²</div>
+                            <div class="label">Area Scaled</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="number">30</div>
+                            <div class="label">Boreholes measured</div>
+                        </div>
+                    </div>
+
+                    <div class="story-tags">
+                        <span class="tag">GPS Rover</span>
+                        <span class="tag">GPS Base</span>
+                        <span class="tag">Photogrammetry</span>
+                        <span class="tag">Orthophoto processing</span>
+                    </div>
+                </div> 
+
+                <div class="story-section" data-location="overview" data-lat="49.5" data-lon="-125.0" data-zoom="8">
+                    <h2>Looking Forward</h2>
+                    <p>These projects represent more than just technical accomplishments—they showcase my growth from survey technician to aspiring GIS technician/analyst. Each project taught me valuable lessons about spatial data collection, quality control, and the importance of accuracy and precision in decision-making.</p>
+
+                    <p>I'm excited to bring this hands-on field experience into GIS analysis roles, where I can bridge the gap between data collection and spatial intelligence. My next steps include expanding my Python automation skills and exploring advanced spatial analysis techniques.</p>
+
+                    <div class="story-tags">
+                        <span class="tag">Career Growth</span>
+                        <span class="tag">Future Goals</span>
+                        <span class="tag">GIS Analysis</span>
+                    </div>
+
+                    <a href="index.html#contact" class="btn btn-primary" style="margin-top: 2rem;">Get in Touch</a>
+                </div> 
+
+            </div>
+            
+            
+            <div class="map-panel">
+                <div id="story-map"></div>
+                </div>
+            </div>
+        </div> 
+
+        
+
+        <footer> 
+            <div class="footer-content">
+                <p>&copy; 2025 CJ | All rights reserved. | Built with passion for GIS&trade; </p>
+                
+                <div class="social-links"> 
+                    <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a> 
+                    <a href="#" title="GitHub"><i class="fab fa-github"></i></a> 
+                    <a href="#" title="Email"><i class="fab fa-envelope"></i></a> 
+
+                </div> 
+            </div>
+        </footer> 
+        
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <script src="https://unpkg.com/proj4/dist/proj4.js"></script>
+        <script src="https://unpkg.com/proj4leaflet"></script>
+        <script src="Button.js"></script> 
+        <script src="StoryMap.js"></script>
+    </body> 
+   
+</html>

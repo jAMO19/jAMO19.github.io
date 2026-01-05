@@ -1,0 +1,213 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+    <head> 
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> 
+            Carson Jamieson - GIS Portfolio
+        </title> 
+        <link rel="stylesheet" href="Style.css"> 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    </head> 
+    <body> 
+
+        <nav id = "navbar"> 
+            <div class = "container">
+                <div class = "logo"> Carson Jamieson.GIS</div> 
+                <ul> 
+                    <li><a href="#home">Home</a></li> 
+                    <li><a href="#about">About</a></li> 
+                    <li><a href="#projects">Projects</a></li> 
+                    <li><a href="#contact">Contact</a></li>
+                </ul> 
+                <div class = "mobile-menu"> 
+                    <i class = "fas fa-bars"></i>
+                </div>
+            </div>  
+        </nav> 
+
+        <section id = "home" class = "hero"> 
+            <div class = "hero-background"> 
+                        <div class="gallery-item tilt-left">
+                        <img src="DJI_0598.jpg" alt="GIS Mapping" class="hero-bg-image">
+                    </div>
+                    <div class="gallery-item tilt-right">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80" alt="Data Analysis" class="hero-bg-image">
+                    </div>
+                    <div class="gallery-item tilt-left">
+                        <img src="map_world.jpg" alt="Survey Technology" class="hero-bg-image">
+                    </div>
+            </div>
+            <div class = "hero-content"> 
+                <h1>Carson Jamieson</h1> 
+                <p class = "subtitle">GIS Technician | Survey Specialist | Spatial Data Analyst</p> 
+                <p>Transforming survey and spatial data into actionable insights with cutting-edge GIS technology and remote sensing analysis</p> 
+                <div class="cta-buttons"> 
+                    <a href="#projects" class="btn btn-primary">View My Work</a> 
+                    <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+                </div>
+
+            </div> 
+
+
+        </section> 
+
+
+    
+
+
+        <section id="about" class="about"> 
+
+            <div class="container"> 
+                <h2 class="section-title">About Me</h2> 
+                <div class="container">
+                    <div class="gallery-grid">
+                        <div class="gallery-item tilt-left video-panel-wrapper">
+                            <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=80" alt="GIS Mapping" class="hero-bg-image"> 
+                            <video class="hover-video" muted loop playsinline> 
+                                <source src="DJI_0617.MP4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="gallery-item tilt-right">
+                            <img src="Peggys_Cove.jpg" alt="Data Analysis">
+                        </div>
+                        <div class="gallery-item tilt-left">
+                            <img src="Quebec_Nordiques.jpg" alt="Survey Technology" class="sharp-enhance">
+                        </div>
+                    </div>
+                </div>
+
+
+                
+                <div class="about-content">
+                    <div class="about-text"> 
+                    
+                        <h3>From Survey Technician to GIS Analyst</h3> 
+                        <p>With hands-on experience as a Survey Technician at McElhanney Ltd., I've developed a strong foundation in spatial data collection and analysis.</p> 
+
+                    </div> 
+                    <div class="skills"> 
+                        <div class="skill-card"> 
+                            <i class="fas fa-map-marked-alt"></i> 
+                            <h4>GIS Software</h4> 
+                            <p>ArcGIS, QGIS, AutoCAD</p>
+                        </div> 
+                        <div class="skill-card"> 
+                            <i class="fas fa-code"></i> 
+                            <h4>Programming</h4> 
+                            <p>Python, JavaScript, SQL, R</p>
+                        </div> 
+                        <div class="skill-card"> 
+                            <i class="fas fa-cube"></i> 
+                            <h4>LiDAR & 3D Spatial Data</h4> 
+                            <p>LiDAR, Photogrammetry, Three.js</p>
+                        </div>
+                        <div class="skill-card"> 
+                            <i class="fas fa-globe"></i> 
+                            <h4>Web Mapping</h4> 
+                            <p>Leaflet, Mapbox, ArcGIS Online</p> 
+                        </div> 
+                    </div>
+                </div>
+                
+            </div> 
+        </section> 
+
+
+        <section id="projects" class="projects-preview"> 
+
+            <div class="container"> 
+                <h2 class="section-title">Featured Projects</h2> 
+                <div class="project-grid">  
+                    <a href="lidar_terrain_analysis.html" style="text-decoration: none; color: inherit;">
+                        <div class="project-card"> 
+                            <div class="project-image"> 
+                                <img src="Point_Cloud.JPG" alt="GIS Mapping" class="hero-bg-image">
+                            </div> 
+                            <div class="project-content"> 
+                                <h3>LiDAR Terrain Analysis</h3> 
+                                <p>Interactive 3D Visualization of Lidar Point Clouds</p> 
+                                <div class="project-tags"> 
+                                    <span class="tag">LiDAR</span> 
+                                    <span class="tag">Three.js</span> 
+                                    <span class="tag">Python</span> 
+                                </div>
+                            </div>
+                        </div> 
+
+                    </a>
+
+                    <a href="story_map.html" style="text-decoration: none; color: inherit;">
+                        <div class="project-card"> 
+                            <div class="project-image"> 
+                                <img src="20231127_114251.jpg" alt="Story Map" class="hero-bg-image">
+                            </div> 
+                            <div class="project-content"> 
+                                <h3>Story Map</h3> 
+                                <p>Web-based story map documenting projects across Vancouver Island</p> 
+                                <div class="project-tags"> 
+                                    <span class="tag">Leaflet</span> 
+                                    <span class="tag">JavaScript</span> 
+                                    <span class="tag">GeoJSON</span> 
+                                </div>
+                            </div>
+                        </div> 
+
+                    </a> 
+
+                    <a href="dead_tree_analysis.html" style="text-decoration: none; color: inherit;">
+
+                        <div class="project-card"> 
+                            <div class="project-image"> 
+                                <img src="Tree_Mortality.JPG" alt="Spatial Analysis" class="hero-bg-image">
+                            </div> 
+                            <div class="project-content"> 
+                                <h3>Tree Mortality Spatial Analysis</h3> 
+                                <p>Automated workflow for processing open source spatial data into raster formats</p> 
+                                <div class="project-tags"> 
+                                    <span class="tag">Python</span> 
+                                    <span class="tag">R</span> 
+                                    <span class="tag">Automation</span> 
+                                </div>
+                            </div>
+                        </div>  
+
+
+
+                    </a>
+                    
+                </div>
+            </div>
+        </section>  
+
+
+        <section id="contact" class="contact"> 
+            <div class="container"> 
+                <h2 class="section-title" style="color: var(--light);">Let's Connect</h2> 
+                <div class="contact-content"> 
+                    <p>I'm always interested in discussing GIS oppurtunities, collaboration on projects, or sharing knowledge about spatial technology</p> 
+                    <div class="social-links"> 
+                        <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a> 
+                        <a href="#" title="GitHub"><i class="fab fa-github"></i></a> 
+                        <a href="#" title="Email"><i class="fab fa-envelope"></i></a> 
+
+                    </div>
+                </div>
+
+
+            </div>
+        </section> 
+            
+        </div>
+        <footer>
+            &copy; 2026 CJ | All rights reserved. | Built with passion for GIS 
+            &trade;
+        </footer> 
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <script src="https://unpkg.com/proj4/dist/proj4.js"></script>
+        <script src="https://unpkg.com/proj4leaflet"></script>
+        <script src="Button.js"></script> 
+    </body> 
+   
+</html>
