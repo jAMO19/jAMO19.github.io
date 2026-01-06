@@ -525,7 +525,7 @@ document.getElementById('showUnclassified').addEventListener('change', updateCla
 init(); 
 
 window.addEventListener('load', () => {
-    const defaultPointCloudUrl = 'Buckley_Bay-L2-cropped.las'; // Or 'assets/your-file.las'
+    const defaultPointCloudUrl = 'https://pub-97447edc0c0a4da8984e9a0362d93423.r2.dev/Buckley_Bay-L2-cropped.las'; // Or 'assets/your-file.las'
     
     showLoading(true, 'Loading default point cloud...');
     
@@ -542,4 +542,5 @@ window.addEventListener('load', () => {
             showLoading(false);
             alert('Failed to load default point cloud. You can still upload your own file.');
         });
+
 });
