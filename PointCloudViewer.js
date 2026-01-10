@@ -130,17 +130,26 @@ function setBackground(type) {
 } 
 
 function loadLAZFile(file) { 
-    showLoading(true, 'Reading file...'); 
+    showLoading(true, 'Reading file...');  
 
     const reader = new FileReader(); 
     reader.onload = function(event) { 
         try { 
-            parseLAZ(event.target.result, file.size);
+            //parseLAZ(event.target.result, file.size); 
+            const arrayBuffer = event.target.result; 
+            const fileName = file.name.toLowerCase(); 
+
+            if (fileName.endsWith('.laz')) { 
+                showLoading(true, 'Decompressing LAZ file...'); 
+                decompressLAZ(arrayBuffer, file.size);
+            } else { 
+                parseLAZ(arrayBuffer, file.size);
+            }
         } 
         catch (error) { 
             console.error('Error parsing LAZ file:', error); 
             alert('Error loading LAZ file. Make sure the file is valid.'); 
-            showLoading(false)
+            showLoading(false);
         } 
         //console.error('It worked'); 
             //alert('It worked');
@@ -150,6 +159,28 @@ function loadLAZFile(file) {
 
 
 } 
+
+function decompressLAZ(compressedBuffer, fileSize) { 
+    try { 
+        const LASzip = window.LASzip || window.laszip; 
+
+        if(!LASzip) {
+            alert('LASzip library not loaded.');
+            showLoading(false);
+            return;
+        } 
+
+        const decompressedBuffer = LASzip.decompress(compressedBuffer, fileSize);
+        parseLAZ(decompressedBuffer, fileSize);
+    } 
+
+    catch (error) { 
+        console.error('Error decompressing LAZ file:', error); 
+        alert('Failed to decompress LAS file.')
+    }
+}
+
+
 
 function parseLAZ(arrayBuffer, fileSize) { 
     
