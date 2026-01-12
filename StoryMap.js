@@ -85,7 +85,8 @@ projects.forEach(project => {
 
             isManualScrolling = true; 
             setTimeout(() => {
-                marker.openPopup();
+                marker.openPopup(); 
+                isManualScrolling = false;
             }, 1000);
         }
     });
