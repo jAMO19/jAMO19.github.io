@@ -85,7 +85,7 @@ projects.forEach(project => {
 
             isManualScrolling = true; 
             setTimeout(() => {
-                isManualScrolling = false;
+                marker.openPopup();
             }, 1000);
         }
     });
@@ -126,6 +126,8 @@ storyPanel.addEventListener('scroll', () => {
                 duration: 1.5, 
                 easeLinearity: 0.25
             }); 
+
+            map.closePopup();
 
             if (markers[location]) { 
                 markers[location].openPopup();
