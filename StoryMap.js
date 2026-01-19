@@ -20,7 +20,7 @@ const projects = [
         id: 'courtenay-downtown', 
         coords: [49.6912, -124.9998], 
         title: 'Downtown Courtenay', 
-        description: 'Parking study', 
+        description: 'Parking Study', 
         image: '20231007_111644.jpg',
         icon: 'road', 
         color: '#e76f51' 
@@ -30,7 +30,7 @@ const projects = [
         id: 'port-hardy', 
         coords: [50.7112, -127.9621], 
         title: 'Holberg', 
-        description: 'Boring hole locations', 
+        description: 'Bore Hole Locations', 
         image: '20231127_103505.jpg', 
         icon: 'road', 
         color: '#e76f51' 
