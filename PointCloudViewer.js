@@ -160,8 +160,9 @@ function loadLAZFile(file) {
 
 } 
 
-function decompressLAZ(compressedBuffer, fileSize) { 
-    try { 
+/*
+async function decompressLAZ(compressedBuffer, fileSize) { 
+    /*try { 
         const LASzip = window.LASzip || window.laszip; 
 
         if(!LASzip) {
@@ -179,6 +180,68 @@ function decompressLAZ(compressedBuffer, fileSize) {
         alert('Failed to decompress LAS file.')
     }
 }
+    try { 
+        showLoading(true, 'Initializing LAZ decompressor...');
+        
+        // Check if laz-perf is available
+        if (typeof LASzip === 'undefined' && typeof laszip === 'undefined') {
+            throw new Error('LAZ decompression library not loaded. Please check that laz-perf.js is included.');
+        }
+
+        const LASzip = window.LASzip || window.laszip;
+        
+        showLoading(true, 'Decompressing LAZ data...');
+        
+        // The laz-perf library API
+        const decompressed = await LASzip.decompressFile(compressedBuffer);
+        
+        console.log('Decompression successful, buffer size:', decompressed.byteLength);
+        
+        parseLAS(decompressed, decompressed.byteLength);
+    } 
+    catch (error) { 
+        console.error('Error decompressing LAZ file:', error); 
+        alert('Failed to decompress LAZ file: ' + error.message + '\n\nPlease try converting the file to uncompressed LAS format.');
+        showLoading(false);
+    } 
+}
+*/
+
+async function decompressLAZWithPako(compressedBuffer, fileSize) {
+
+    try {
+        // laz-perf initializes as a factory
+        const factory = window.Module; 
+        if (!factory) {
+            throw new Error('LAZ-perf Module not found');
+        }
+
+        // Initialize the decompressor
+        const arrayBuffer = new Uint8Array(compressedBuffer);
+        const chunkReader = new factory.ArrayBufferReader(arrayBuffer.buffer);
+        const lasZip = new factory.LASZip();
+        
+        lasZip.open(chunkReader, false);
+        
+        const pointCount = lasZip.getPointCount();
+        const pointSize = lasZip.getPointSize();
+        const decompressedSize = lasZip.getHeader().points_offset + (pointCount * pointSize);
+        
+        // Create a new buffer for the raw LAS data
+        const outBuffer = new Uint8Array(decompressedSize);
+        
+        // Decompress - laz-perf handles the header and points
+        lasZip.getPoints(outBuffer);
+        
+        console.log('Decompression successful. Points:', pointCount);
+        parseLAZ(outBuffer.buffer, outBuffer.byteLength);
+
+    } catch (error) {
+        console.error('LAZ decompression error:', error);
+        alert('Failed to decompress LAZ: ' + error.message);
+        showLoading(false);
+    }
+}
 
 
 
@@ -189,16 +252,39 @@ function parseLAZ(arrayBuffer, fileSize) {
 
     const view = new DataView(arrayBuffer); 
 
+    if (arrayBuffer.byteLength < 227) {
+            throw new Error('File is too small to be a valid LAS/LAZ file');
+    }
+
+    const signature = String.fromCharCode(
+        view.getUint8(0),
+        view.getUint8(1),
+        view.getUint8(2),
+        view.getUint8(3)
+    );
+    
+    if (signature !== 'LASF') {
+        throw new Error('Invalid LAS file signature. Expected "LASF", got "' + signature + '"');
+    }
+
     const pointDataOffset = view.getUint32(96, true); 
     const pointDataRecordLength = view.getUint16(105, true); 
     const numPointRecords = view.getUint32(107, true); 
     const pointDataFormat = view.getUint8(104);
     
-    console.log('=== LAS FILE INFO ===');
+    console.log('=== LAS FILE INFO ==='); 
+    console.log('File signature:', signature);
     console.log('Point Data Format:', pointDataFormat);
     console.log('Point Data Offset:', pointDataOffset);
     console.log('Point Record Length:', pointDataRecordLength);
-    console.log('Number of Points:', numPointRecords);
+    console.log('Number of Points:', numPointRecords); 
+    console.log('Buffer size:', arrayBuffer.byteLength); 
+
+    const expectedSize = pointDataOffset + (numPointRecords * pointDataRecordLength);
+    if (expectedSize > arrayBuffer.byteLength) {
+        console.warn('Expected file size:', expectedSize, 'Actual:', arrayBuffer.byteLength);
+        throw new Error('Point data extends beyond file bounds. File may be corrupted or incompletely decompressed.');
+    }
 
 
     const scaleX = view.getFloat64(131, true); 
@@ -227,6 +313,12 @@ function parseLAZ(arrayBuffer, fileSize) {
 
         const offset = pointDataOffset + (i * pointDataRecordLength); 
 
+        if (offset + 32 > arrayBuffer.byteLength) {
+            console.warn('Reached end of buffer at point', i);
+            break;
+        }
+
+
         const x = view.getInt32(offset, true) * scaleX + offsetX; 
         const y = view.getInt32(offset + 4, true) * scaleY + offsetY; 
         const z = view.getInt32(offset + 8, true) * scaleZ + offsetZ; 
@@ -244,7 +336,7 @@ function parseLAZ(arrayBuffer, fileSize) {
             r = view.getUint16(offset + 20, true) / 65535;
             g = view.getUint16(offset + 22, true) / 65535;
             b = view.getUint16(offset + 24, true) / 65535;
-        }
+        } 
 
         pointsData.positions.push(x, y, z); 
         pointsData.colors.push(r, g, b); 
@@ -297,6 +389,214 @@ function parseLAZ(arrayBuffer, fileSize) {
 
     showLoading(false); 
 } 
+
+/*
+function parseLAS(arrayBuffer, fileSize) { 
+    
+    try {
+        showLoading(true, 'Parsing LAS file...'); 
+
+        const view = new DataView(arrayBuffer); 
+        
+        // Validate minimum file size
+        if (arrayBuffer.byteLength < 227) {
+            throw new Error('File is too small to be a valid LAS file (minimum 227 bytes required)');
+        }
+        
+        // Check LAS signature
+        const signature = String.fromCharCode(
+            view.getUint8(0),
+            view.getUint8(1),
+            view.getUint8(2),
+            view.getUint8(3)
+        );
+        
+        if (signature !== 'LASF') {
+            throw new Error('Invalid LAS file signature. Expected "LASF", got "' + signature + '"\n\nThis may be a compressed LAZ file.');
+        }
+
+        // Read header information
+        const versionMajor = view.getUint8(24);
+        const versionMinor = view.getUint8(25);
+        const headerSize = view.getUint16(94, true);
+        const pointDataOffset = view.getUint32(96, true); 
+        const pointDataFormat = view.getUint8(104);
+        const pointDataRecordLength = view.getUint16(105, true); 
+        
+        // Handle both legacy and extended point records
+        let numPointRecords = view.getUint32(107, true);
+        
+        // LAS 1.4 uses extended point count if legacy count is 0
+        if (numPointRecords === 0 && versionMinor >= 4) {
+            // Extended number of point records is at offset 247 (uint64)
+            if (arrayBuffer.byteLength >= 255) {
+                const low = view.getUint32(247, true);
+                const high = view.getUint32(251, true);
+                numPointRecords = low + (high * 0x100000000);
+            }
+        }
+        
+        console.log('=== LAS FILE INFO ===');
+        console.log('LAS Version:', versionMajor + '.' + versionMinor);
+        console.log('File signature:', signature);
+        console.log('Header size:', headerSize);
+        console.log('Point Data Format:', pointDataFormat);
+        console.log('Point Data Offset:', pointDataOffset);
+        console.log('Point Record Length:', pointDataRecordLength);
+        console.log('Number of Points:', numPointRecords);
+        console.log('Buffer size:', arrayBuffer.byteLength, 'bytes');
+
+        // Validate point data will fit in buffer
+        const expectedSize = pointDataOffset + (numPointRecords * pointDataRecordLength);
+        if (expectedSize > arrayBuffer.byteLength) {
+            console.error('Expected file size:', expectedSize, 'bytes');
+            console.error('Actual buffer size:', arrayBuffer.byteLength, 'bytes');
+            console.error('Shortfall:', expectedSize - arrayBuffer.byteLength, 'bytes');
+            throw new Error(
+                'Point data extends beyond file bounds. File may be corrupted or incompletely decompressed.\n\n' +
+                'Expected: ' + (expectedSize / 1024 / 1024).toFixed(2) + ' MB\n' +
+                'Actual: ' + (arrayBuffer.byteLength / 1024 / 1024).toFixed(2) + ' MB\n\n'
+            );
+        }
+
+        const scaleX = view.getFloat64(131, true); 
+        const scaleY = view.getFloat64(139, true); 
+        const scaleZ = view.getFloat64(147, true); 
+
+        const offsetX = view.getFloat64(155, true); 
+        const offsetY = view.getFloat64(163, true); 
+        const offsetZ = view.getFloat64(171, true); 
+
+        console.log('Scale factors:', scaleX, scaleY, scaleZ);
+        console.log('Offsets:', offsetX, offsetY, offsetZ);
+
+        const maxPoints = parseInt(document.getElementById('maxPoints').value) * 1_000_000; 
+        const skip = Math.max(1, Math.floor(numPointRecords / maxPoints)); 
+     
+        pointsData = { positions: [], colors: [], intensities: [], classifications: [], count: 0 }; 
+        bounds = { min: [Infinity, Infinity, Infinity], max: [-Infinity, -Infinity, -Infinity] }; 
+
+        let pointsLoaded = 0;
+
+        for (let i = 0; i < numPointRecords; i += skip) { 
+
+            if (i % 100000 === 0) { 
+                updateProgress((i / numPointRecords) * 100); 
+                document.getElementById('loadingText').textContent = 
+                    `Loading points: ${(i / 1_000_000).toFixed(1)}M / ${(numPointRecords / 1_000_000).toFixed(1)}M`; 
+            } 
+
+            const offset = pointDataOffset + (i * pointDataRecordLength); 
+            
+            // Validate offset is within bounds
+            if (offset + 26 > arrayBuffer.byteLength) {
+                console.warn('Reached end of buffer at point', i, 'of', numPointRecords);
+                break;
+            }
+
+            const x = view.getInt32(offset, true) * scaleX + offsetX; 
+            const y = view.getInt32(offset + 4, true) * scaleY + offsetY; 
+            const z = view.getInt32(offset + 8, true) * scaleZ + offsetZ; 
+            
+            const intensity = view.getUint16(offset + 12, true); 
+            const classification = view.getUint8(offset + 15) & 0x1F; 
+
+            let r, g, b; 
+            
+            // Different point formats have RGB at different offsets
+            try {
+                if (pointDataFormat === 2 || pointDataFormat === 3) {
+                    // Format 2 and 3 have RGB at offset 20
+                    if (offset + 26 <= arrayBuffer.byteLength) {
+                        r = view.getUint16(offset + 20, true) / 65535; 
+                        g = view.getUint16(offset + 22, true) / 65535; 
+                        b = view.getUint16(offset + 24, true) / 65535;
+                    } else {
+                        r = g = b = intensity / 65535;
+                    }
+                } else if (pointDataFormat >= 6 && pointDataFormat <= 8) {
+                    // Format 6, 7, 8 have RGB at offset 28
+                    if (offset + 34 <= arrayBuffer.byteLength) {
+                        r = view.getUint16(offset + 28, true) / 65535;
+                        g = view.getUint16(offset + 30, true) / 65535;
+                        b = view.getUint16(offset + 32, true) / 65535;
+                    } else {
+                        r = g = b = intensity / 65535;
+                    }
+                } else {
+                    // Format 0, 1 don't have RGB - use intensity
+                    const norm = intensity / 65535;
+                    r = g = b = norm;
+                }
+            } catch (e) {
+                // If RGB read fails, use gray based on intensity
+                const norm = intensity / 65535;
+                r = g = b = norm;
+            }
+
+            pointsData.positions.push(x, y, z); 
+            pointsData.colors.push(r, g, b); 
+            pointsData.intensities.push(intensity / 65535); 
+            pointsData.classifications.push(classification); 
+
+            bounds.min[0] = Math.min(bounds.min[0], x); 
+            bounds.min[1] = Math.min(bounds.min[1], y); 
+            bounds.min[2] = Math.min(bounds.min[2], z); 
+
+            bounds.max[0] = Math.max(bounds.max[0], x); 
+            bounds.max[1] = Math.max(bounds.max[1], y); 
+            bounds.max[2] = Math.max(bounds.max[2], z); 
+
+            if (i === 0) {
+                console.log('=== FIRST POINT DATA ===');
+                console.log('Position:', x.toFixed(3), y.toFixed(3), z.toFixed(3)); 
+                console.log('RGB (normalized):', r.toFixed(3), g.toFixed(3), b.toFixed(3));
+                console.log('Intensity:', intensity); 
+                console.log('Classification:', classification);
+            }
+
+            pointsLoaded++;
+        } 
+
+        pointsData.count = pointsData.positions.length / 3; 
+
+        console.log('=== PARSING COMPLETE ===');
+        console.log('Points loaded:', pointsLoaded.toLocaleString());
+        console.log('Bounds:', bounds);
+
+        // Center the point cloud
+        const centerX = (bounds.min[0] + bounds.max[0]) / 2; 
+        const centerY = (bounds.min[1] + bounds.max[1]) / 2; 
+        const centerZ = (bounds.min[2] + bounds.max[2]) / 2; 
+
+        for (let i = 0; i < pointsData.positions.length; i += 3) { 
+            pointsData.positions[i] -= centerX; 
+            pointsData.positions[i + 1] -= centerY; 
+            pointsData.positions[i + 2] -= centerZ; 
+        } 
+
+        bounds.min[0] -= centerX; 
+        bounds.min[1] -= centerY; 
+        bounds.min[2] -= centerZ; 
+
+        bounds.max[0] -= centerX; 
+        bounds.max[1] -= centerY; 
+        bounds.max[2] -= centerZ; 
+
+        document.getElementById('numPoints').textContent = pointsData.count.toLocaleString(); 
+        document.getElementById('fileSize').textContent = (fileSize / (1024 * 1024)).toFixed(2) + ' MB'; 
+
+        createPointCloud(); 
+        fitCameraToPoints(); 
+        showLoading(false);
+        
+    } catch (error) {
+        console.error('Error in parseLAS:', error);
+        alert('Error parsing LAS file:\n\n' + error.message);
+        showLoading(false);
+    }
+} 
+    */
 
 function createPointCloud() { 
     if (pointCloud) { 
@@ -556,8 +856,8 @@ document.getElementById('showUnclassified').addEventListener('change', updateCla
 init(); 
 
 window.addEventListener('load', () => {
-    const defaultPointCloudUrl = 'https://pub-97447edc0c0a4da8984e9a0362d93423.r2.dev/test3.las'; // Or 'assets/your-file.las' 
-    //const defaultPointCloudUrl = 'BB-half-1-test.las'; // Or 'assets/your-file.las'
+    const defaultPointCloudUrl = 'https://pub-97447edc0c0a4da8984e9a0362d93423.r2.dev/Buckley_Bay-L2-1.laz'; // Or 'assets/your-file.las' 
+    //const defaultPointCloudUrl = 'Buckley_Bay-L2-1.las'; // Or 'assets/your-file.las'
     
     showLoading(true, 'Loading default point cloud...');
     

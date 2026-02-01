@@ -12,7 +12,7 @@ const projects = [
         title: 'John Hart Dam', 
         description: 'BC Hydro Project', 
         image: '20250905_085206.jpg',
-        icon: 'road', 
+        icon: 'truck', 
         color: '#e76f51' 
     }, 
 
@@ -22,7 +22,7 @@ const projects = [
         title: 'Downtown Courtenay', 
         description: 'Parking Study', 
         image: '20231007_111644.jpg',
-        icon: 'road', 
+        icon: 'car', 
         color: '#e76f51' 
     }, 
 
@@ -32,9 +32,21 @@ const projects = [
         title: 'Holberg', 
         description: 'Bore Hole Locations', 
         image: '20231127_103505.jpg', 
+        icon: 'tree', 
+        color: '#e76f51' 
+    }, 
+
+    { 
+        id: 'campbell-river', 
+        coords: [50.0184, -125.2662], 
+        title: 'Campbell River', 
+        description: 'Traffic Counting Study', 
+        image: '20231127_103505.jpg', 
         icon: 'road', 
         color: '#e76f51' 
-    }
+    } 
+
+    
 
 ]; 
 
