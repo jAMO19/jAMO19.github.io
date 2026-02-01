@@ -856,7 +856,7 @@ document.getElementById('showUnclassified').addEventListener('change', updateCla
 init(); 
 
 window.addEventListener('load', () => {
-    const defaultPointCloudUrl = 'https://pub-97447edc0c0a4da8984e9a0362d93423.r2.dev/test3.las'; // Or 'assets/your-file.las' 
+    const defaultPointCloudUrl = 'https://pub-97447edc0c0a4da8984e9a0362d93423.r2.dev/BB.las'; // Or 'assets/your-file.las' 
     //const defaultPointCloudUrl = 'Buckley_Bay-L2-1.las'; // Or 'assets/your-file.las'
     
     showLoading(true, 'Loading default point cloud...');
