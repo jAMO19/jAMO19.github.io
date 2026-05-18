@@ -41,7 +41,7 @@ const projects = [
         coords: [50.0184, -125.2662], 
         title: 'Campbell River', 
         description: 'Traffic Counting Study', 
-        image: 'Traffic_Counter_2.png', 
+        image: 'Traffic_Counter_2.jpg', 
         icon: 'road', 
         color: '#e76f51' 
     } 
