@@ -645,12 +645,13 @@ footer {
 .story-header {
     background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
     color: var(--light);
-    padding: 4rem 2rem 3rem;
+    padding: 3rem 2rem 2rem;
     text-align: center;
 }
 
 .story-header h1 {
-    font-size: 2.5rem;
+    font-size: 2.5rem; 
+    margin-top: 1rem;
     margin-bottom: 1rem;
 }
 
@@ -671,7 +672,7 @@ footer {
 .story-panel { 
     width: 45%;
     min-width: 450px;
-    max-width: 800px;
+    max-width: 550px; 
     overflow-y: auto;
     background: white;
     z-index: 10;
@@ -749,7 +750,7 @@ footer {
 
 .story-image {
     width: 100%;
-    height: 500px;
+    height: 700px;
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     border-radius: 10px;
     margin: 1.5rem 0;
@@ -894,7 +895,7 @@ footer {
 
 .custom-popup img {
     width: 100%;
-    height: 200px;
+    height: 360px;
     object-fit: cover;
     display: block;
     border-radius: 0;
@@ -902,7 +903,7 @@ footer {
 
 .custom-popup h3 {
     margin: 0;
-    padding: 16px 20px 8px 20px;
+    padding: 16px 20px 6px 20px;
     color: var(--primary);
     font-size: 1.3rem;
     font-weight: 700;
@@ -911,7 +912,7 @@ footer {
 
 .custom-popup p {
     margin: 0;
-    padding: 0 20px 20px 20px;
+    padding: 0 20px 16px 20px;
     color: #666;
     font-size: 0.95rem;
     line-height: 1.6;
@@ -1171,4 +1172,167 @@ canvas {
 .map-nav-controls { 
     display: none;
 
+} 
+
+.time-slider-control { 
+    gap: 10px; 
+    padding: 10px 14px; 
+} 
+ 
+.time-slider-control .slider-wrap { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: stretch; 
+    min-width: 220px; 
+} 
+ 
+.time-slider-control .raster-title { 
+    min-width: 0; 
+    margin-bottom: 4px; 
+} 
+ 
+.year-slider { 
+    width: 100%; 
+    height: 6px; 
+    cursor: pointer; 
+    accent-color: var(--accent); 
+    margin: 4px 0; 
+} 
+ 
+.slider-ticks { 
+    display: flex; 
+    justify-content: space-between; 
+    font-size: 11px; 
+    color: #666; 
+} 
+ 
+.slider-tick { 
+    flex: 0 0 auto; 
+} 
+ 
+@media (max-width: 600px) { 
+    .time-slider-control .slider-wrap { 
+        min-width: 140px; 
+    } 
+} 
+
+ 
+/* ---- Compare (swipe) mode ---- */
+.compare-toggle.active,
+.compare-toggle[aria-pressed="true"] { 
+    background: var(--accent); 
+} 
+ 
+.time-slider-control .compare-selects { 
+    display: none; 
+    gap: 12px; 
+    align-items: center; 
+} 
+ 
+.compare-selects label { 
+    font-size: 13px; 
+    font-weight: bold; 
+    color: var(--primary); 
+    display: flex; 
+    align-items: center; 
+    gap: 6px; 
+} 
+ 
+.compare-selects select { 
+    padding: 5px 8px; 
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    font-size: 13px; 
+    background: white; 
+    cursor: pointer; 
+} 
+ 
+.time-slider-control.compare-mode .compare-selects { 
+    display: flex; 
+} 
+ 
+.time-slider-control.compare-mode .slider-wrap, 
+.time-slider-control.compare-mode #playRaster, 
+.time-slider-control.compare-mode #prevRaster, 
+.time-slider-control.compare-mode #nextRaster { 
+    display: none; 
+} 
+ 
+.compare-divider { 
+    position: absolute; 
+    top: 0; 
+    bottom: 0; 
+    width: 44px; 
+    margin-left: -22px; 
+    z-index: 800; 
+    cursor: ew-resize; 
+    touch-action: none; 
+    outline: none; 
+} 
+ 
+.compare-line { 
+    position: absolute; 
+    top: 0; 
+    bottom: 0; 
+    left: 50%; 
+    width: 4px; 
+    margin-left: -2px; 
+    background: white; 
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.5); 
+} 
+ 
+.compare-handle { 
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    width: 40px; 
+    height: 40px; 
+    margin: -20px 0 0 -20px; 
+    border-radius: 50%; 
+    background: white; 
+    color: var(--primary); 
+    border: 3px solid var(--primary); 
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-size: 16px; 
+    transition: transform 0.15s; 
+} 
+ 
+.compare-divider:hover .compare-handle, 
+.compare-divider:focus .compare-handle, 
+.compare-divider.dragging .compare-handle { 
+    transform: scale(1.12); 
+    border-color: var(--accent); 
+    color: var(--accent); 
+} 
+ 
+.compare-label { 
+    position: absolute; 
+    top: 12px; 
+    padding: 3px 10px; 
+    background: rgba(255, 255, 255, 0.95); 
+    color: var(--primary); 
+    font-weight: bold; 
+    font-size: 14px; 
+    border-radius: 4px; 
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3); 
+    pointer-events: none; 
+    white-space: nowrap; 
+} 
+ 
+.compare-label-left { 
+    right: 30px; 
+} 
+ 
+.compare-label-right { 
+    left: 30px; 
+} 
+ 
+@media (max-width: 600px) { 
+    .time-slider-control.compare-mode { 
+        flex-wrap: wrap; 
+        justify-content: center; 
+    } 
 }

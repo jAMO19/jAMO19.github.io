@@ -1,4 +1,4 @@
-const map = L.map('story-map').setView([50.0, -125.5], 8); 
+const map = L.map('story-map').setView([50.0, -125.5], 5); 
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors',
@@ -44,13 +44,26 @@ const projects = [
         image: 'Traffic_Counter_2.jpg', 
         icon: 'road', 
         color: '#e76f51' 
-    } 
+    }, 
+
+    { 
+        id: 'cold-lake', 
+        coords: [54.6134, -110.4731], 
+        title: 'Cold Lake, Alberta', 
+        description: 'Wellpad Scannning', 
+        image: 'NAVVIS_Scanner.jpg', 
+        icon: 'road', 
+        color: '#e76f51'
+    }
 
     
 
 ]; 
 
-let isManualScrolling = false;
+let isManualScrolling = false; 
+let currentLocation = 'intro'; 
+let pendingOpen = null; 
+const MARKER_OFFSET_Y = 150;
 
 const markers = {}; 
 projects.forEach(project => { 
@@ -65,7 +78,7 @@ projects.forEach(project => {
         .addTo(map) 
         .bindPopup(`
             <div class="custom-popup"> 
-                <img src="${project.image}" alt="${project.title}" style="width:100%; height:200px; object-fit:cover; border-radius:5px; margin-bottom:8px;">
+                <img src="${project.image}" alt="${project.title}" style="width:100%; height:360px; object-fit:cover; border-radius:5px; margin-bottom:8px;">
                 <h3>${project.title}</h3>
                 <p>${project.description}</p>
             </div>
@@ -80,7 +93,7 @@ projects.forEach(project => {
         }); 
 
 
-    marker.on('click', function() {
+    /* marker.on('click', function() {
         map.flyTo(project.coords, 14, { duration: 1.5 }); 
         const targetSection = document.querySelector('.story-section[data-location="' + project.id + '"]'); 
         if (targetSection && storyPanel) { 
@@ -92,7 +105,14 @@ projects.forEach(project => {
                 //block: 'start'
             }); 
 
-            marker.openPopup(); 
+            setTimeout(() => {
+                marker.openPopup(); 
+                // Pan the map down by 150 pixels so the marker sits higher up 
+                // and leaves room for the 200px tall popup image above it
+                map.panBy([550, -800], { animate: true, duration: 0.5 });
+            }, 1000);
+
+            //marker.openPopup(); 
 
 
             isManualScrolling = true; 
@@ -106,6 +126,29 @@ projects.forEach(project => {
     markers[project.id] = marker;
 }); 
 
+*/ 
+
+    marker.on('click', function () {
+        isManualScrolling = true; 
+        currentLocation = project.id;
+
+        flyToOffset(project.coords, 14, MARKER_OFFSET_Y, () => marker.openPopup());
+
+        const targetSection = document.querySelector(
+            '.story-section[data-location="' + project.id + '"]'
+        );
+        if (targetSection) {
+            storyPanel.scrollTo({ top: targetSection.offsetTop, behavior: 'smooth' });
+        }
+
+        setTimeout(() => { isManualScrolling = false; }, 1600);
+    }); 
+
+     markers[project.id] = marker;
+
+});
+
+
 const storyPanel = document.getElementById('storyPanel'); 
 const sections = document.querySelectorAll('.story-section'); 
 const progressFill = document.getElementById('progressFill'); 
@@ -117,15 +160,37 @@ storyPanel.addEventListener('scroll', () => {
     const scrollPercent = (storyPanel.scrollTop / (storyPanel.scrollHeight - storyPanel.clientHeight)) * 100; 
     progressFill.style.width = scrollPercent + '%'; 
 
-    let activeSection = null; 
-    sections.forEach(section => { 
-        const rect = section.getBoundingClientRect(); 
-        if (rect.top < window.innerHeight / 2 && rect.bottom > window.innerHeight / 2) { 
+    let activeSection = null;
+    sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top < window.innerHeight / 2 && rect.bottom > window.innerHeight / 2) {
             activeSection = section;
         }
-    }); 
+    });
+    if (!activeSection) return; 
 
-    if (activeSection) { 
+    sections.forEach(s => s.classList.remove('active'));
+    activeSection.classList.add('active');
+
+    const location = activeSection.dataset.location;
+    if (location === currentLocation) return;   // same section: don't re-fly
+    currentLocation = location;
+
+    const lat  = parseFloat(activeSection.dataset.lat);
+    const lon  = parseFloat(activeSection.dataset.lon);
+    const zoom = parseFloat(activeSection.dataset.zoom);
+
+    map.closePopup();
+
+    const marker = markers[location];
+    flyToOffset(
+        marker ? marker.getLatLng() : [lat, lon],   // land exactly where a click would
+        zoom,
+        marker ? MARKER_OFFSET_Y : 0,
+        marker ? () => marker.openPopup() : null
+    );
+
+    /*if (activeSection) { 
         sections.forEach(s => s.classList.remove('active')); 
         activeSection.classList.add('active'); 
 
@@ -134,22 +199,66 @@ storyPanel.addEventListener('scroll', () => {
         const zoom = activeSection.dataset.zoom; 
         const location = activeSection.dataset.location; 
 
-        if (lat && lon && zoom) { 
-            map.flyTo([parseFloat(lat), parseFloat(lon)], parseInt(zoom), { 
+        if (location == currentLocation) {
+            return; 
+        } 
+        
+        currentLocation = location; 
+
+        map.closePopup(); 
+
+        const marker = markers[location];
+        flyToOffset(
+            marker ? marker.getLatLng() : [lat, lon],   // land exactly where a click would
+            zoom,
+            marker ? MARKER_OFFSET_Y : 0,
+            marker ? () => marker.openPopup() : null
+        ); 
+        */
+
+        /*if (lat && lon && zoom) { 
+            /* map.flyTo([parseFloat(lat), parseFloat(lon)], parseInt(zoom), { 
                 duration: 1.5, 
                 easeLinearity: 0.25
-            }); 
+            });  
 
-            map.closePopup();
-
-            if (markers[location]) { 
-                markers[location].openPopup();
-            }
+            const hasMarker = !!markers[location]; 
+            flyToOffset([parseFloat(lat), parseFloat(lon)], parseInt(zoom), hasMarker ? MARKER_OFFSET_Y : 0, hasMarker ? () => markers[location].openPopup() : null);
         }
-    }
+            //map.closePopup();
+
+            /*if (markers[location]) { 
+                markers[location].openPopup();
+
+                
+            }*/
+        //} 
 }); 
 
 setTimeout(() => { 
     sections[0].classList.add('active'); 
-}, 500);
+}, 500); 
 
+// How far below the map's vertical center the pin should land (px).
+// Raise it to push the pin lower, lower it to bring the pin closer to center.
+//const MARKER_OFFSET_Y = 150;
+
+//let pendingOpen = null;
+
+function flyToOffset(latlng, zoom, offsetY, onDone) {
+    // Work in pixel space at the *target* zoom, then move the center UP by offsetY.
+    // A center that's higher on the map puts the pin lower on the screen.
+    const point = map.project(L.latLng(latlng), zoom).subtract([0, offsetY]);
+    const target = map.unproject(point, zoom);
+
+    // Cancel any popup-open that's still waiting from a previous fly
+    if (pendingOpen) map.off('moveend', pendingOpen);
+    pendingOpen = null;
+
+    if (onDone) {
+        pendingOpen = () => { pendingOpen = null; onDone(); };
+        map.once('moveend', pendingOpen);
+    }
+
+    map.flyTo(target, zoom, { duration: 2.0, easeLinearity: 0.25 });
+}
